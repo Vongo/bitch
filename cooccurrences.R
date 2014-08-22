@@ -1,8 +1,8 @@
 
 source("CONSTANTS.R")
 
-remove.symbols <- function(x) {
-
+replace.something <- function(char, searched,replacing) {
+	paste(unlist(strsplit(char,searched,replacing)),collapse=replacing)
 }
 
 root <- function(x) {
@@ -10,7 +10,7 @@ root <- function(x) {
 }
 
 transform <- function(x,s=NA,t=NA) {
-	df <- data.frame(matrix(vector(), 99, 3, dimnames=list(c(), c("Source","Target","Strength"))), stringsAsFactors=F)
+	df <- data.frame(matrix(vector(), 99, 3, dimnames=list(c(), c("Source","Target","Weight"))), stringsAsFactors=F)
 	su <- summary(as.factor(x))
 	if(is.na(t)){
 		df$Source <- rep(s,99)
@@ -19,14 +19,17 @@ transform <- function(x,s=NA,t=NA) {
 		df$Source <- names(su)[1:99]
 		df$Target <- rep(t,99)
 	}
-	df$Strength <- as.numeric(su)[1:99]
+	df$Weight <- as.numeric(su)[1:99]
 	df
 }
 
-graph <- data.frame(matrix(vector(), 0, 3, dimnames=list(c(), c("Source","Target","Strength"))), stringsAsFactors=F)
+graph <- data.frame(matrix(vector(), 0, 3, dimnames=list(c(), c("Source","Target","Weight"))), stringsAsFactors=F)
 
 data <- read.csv("CLEAN_ANONYMOUS.csv", sep = ",", header = T, stringsAsFactors = F)
 data$Content <- tolower(data$Content)
+data$Content <- gsub(","," ",data$Content)
+data$Content <- gsub(":"," ",data$Content)
+data$Content <- gsub("-"," ",data$Content)
 
 # Naive implementation
 for (a in ACTORS) {
@@ -51,7 +54,7 @@ for (a in ACTORS) {
 	})
 }
 
-graph <- graph[complete.cases(graph) & graph$Strength >= 4,]
+graph <- graph[complete.cases(graph) & graph$Weight >= 3,]
 
 write.table(graph,"vocable.csv",
 	append = FALSE, quote = TRUE, sep = ",",
