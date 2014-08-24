@@ -14,31 +14,48 @@ vectorize.factor <- function(v) {
 	y
 }
 
-# 
-# Assumes that schema(data) contains (timeCol) as a (character) column formatted like ('%d/%m/%Y %H:%M')
-aggreg.by.hourInDay <- function(data, timeCol,...) {
-	vectorize.factor(factor(HOURS[as.POSIXlt(strptime(data[,timeCol],format='%d/%m/%Y %H:%M'))$hour+1],levels=HOURS))
+
+avgLength.by.hourInDay <- function(data, lengthCol,...) {
+	vectorize.factor(factor(HOURS[as.POSIXlt(strptime(data[,timeCol],format='%d/%m/%Y %H:%M'))$hour],levels=HOURS))	
 }
 
-# 
+avgLength.by.dayInMonth <- function(data, lengthCol,...) {
+
+}
+
+avgLength.by.dayInWeek <- function(data, lengthCol,...) {
+
+}
+
+avgLength.by.monthInYear <- function(data, lengthCol,...) {
+
+}
+
+avgLength.by.time <- function(data, lengthCol,...) {
+
+}
+
+
+# Assumes that schema(data) contains (timeCol) as a (character) column formatted like ('%d/%m/%Y %H:%M')
+aggreg.by.hourInDay <- function(data, timeCol,...) {
+	vectorize.factor(factor(HOURS[as.POSIXlt(strptime(data[,timeCol],format='%d/%m/%Y %H:%M'))$hour],levels=HOURS))
+}
+
 # Assumes that schema(data) contains (timeCol) as a (character) column formatted like ('%d/%m/%Y %H:%M')
 aggreg.by.dayInMonth <- function(data, timeCol,...) {
 	vectorize.factor(factor(MDAYS[as.POSIXlt(strptime(data[,timeCol],format='%d/%m/%Y %H:%M'))$mday],levels=MDAYS))
 }
 
-# 
 # Assumes that schema(data) contains (timeCol) as a (character) column formatted like ('%d/%m/%Y %H:%M')
 aggreg.by.dayInWeek <- function(data, timeCol,...) {
 	vectorize.factor(factor(WDAYS[as.POSIXlt(strptime(data[,timeCol],format='%d/%m/%Y %H:%M'))$wday + 1],levels=WDAYS))
 }
 
-# 
 # Assumes that schema(data) contains (timeCol) as a (character) column formatted like ('%d/%m/%Y %H:%M')
 aggreg.by.monthInYear <- function(data, timeCol,...) {
 	vectorize.factor(factor(MONTHS[as.POSIXlt(strptime(data[,timeCol],format='%d/%m/%Y %H:%M'))$mon + 1],levels=OMONTHS))
 }
 
-# 
 # Assumes that schema(data) contains (timeCol) as a (character) column formatted like ('%d/%m/%Y %H:%M')
 aggreg.by.time <- function(data, timeCol,...) {
 	as.POSIXct(strptime(data[,timeCol],format='%d/%m/%Y %H:%M'))
@@ -98,8 +115,8 @@ stats.by.actor.detail <- function() {
 	## WARNING : this function is context-dependant
 	images <- function(fun,path,...) {
 		# Global stats
-		aggreg <- fun[[2]]
 		img <- fun[[1]]
+		aggreg <- fun[[2]]
 		dRcv <- aggreg(messages[messages$Target==BITCH,],"DateTime",...)
 		dSnt <- aggreg(messages[messages$Source==BITCH,],"DateTime",...)
 		pRcv <- img(dRcv,"Received",...)
@@ -127,7 +144,11 @@ stats.by.actor.detail <- function() {
 		}
 	}
 
-	messages <- read.csv("CLEAN_ANONYMOUS.csv")
+	messages <- read.csv("CLEAN_ANONYMOUS.csv",stringsAsFactors=F)
+
+	lengths <- data.frame(matrix(vector(), nrow(messages), 4, dimnames=list(c(), c("Source","Target","DateTime","Length"))), stringsAsFactors=F)
+	lengths[,1:3] <- messages[,2:4]
+	lengths[,4] <- sapply(messages$Content,function(x) nchar(x))
 
 	if(VERBOSE) cat(paste("Data is clean and tidy.\n"))
 	# Could generate a lot of warnings, but it is ok. Shouldn't though.
