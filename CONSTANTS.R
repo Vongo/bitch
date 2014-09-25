@@ -1,4 +1,4 @@
-ACTORS = c("OFFICIAL","Copiiiiine","Punk random girl","Mirror Man (has GF)","ex dépressif","Poète maudit","BFF <3","Alt BFF","Some classmate","Dickhead ex","ex's brother","Mother","Hippie classmate","Cyber friend (has GF)","Cybersex random","Creepy Cousin","Daddy","Blond surfer")
+ACTORS = c("OFFICIAL","Copiiiiine","PunkRandomGirl","MirrorMan","WhinyEx","CursedPoet","BFF","AltBFF","RandomClassmate","InTheFridge","AltClassmate","DickheadEx","exsBrother","MotherFriend","AnotherPoet","CyberFriend","Tutoring","CybersexRandom","CreepyCousin","Daddy(issues)","Stalker","SomeClassmate","Underage","SomeGuy","Brice2Nice")
 BITCH = "Bitch"
 
 VERBOSE = T
