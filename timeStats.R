@@ -161,7 +161,7 @@ stats.by.actor.detail <- function() {
 	messages <- read.csv("CLEAN_ANONYMOUS.csv",stringsAsFactors=F)
 
 	lengths <- data.frame(matrix(vector(), nrow(messages), 4, dimnames=list(c(), c("Source","Target","DateTime","Length"))), stringsAsFactors=F)
-	lengths[,1:3] <- messages[,2:4]
+	lengths[,1:3] <- messages[,1:3]
 	lengths[,4] <- sapply(messages$Content,function(x) nchar(x))
 
 	if(VERBOSE) cat(paste("Data is clean and tidy.\n"))
